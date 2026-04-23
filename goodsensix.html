@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>GOODSENSIX – By Xyroo</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Exo+2:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #080b0b;
+  --bg2: #0c1010;
+  --surface: #111616;
+  --surface2: #161e1e;
+  --surface3: #1c2626;
+  --teal: #00e5d4;
+  --teal2: #00bcd4;
+  --teal-dim: #007a70;
+  --teal-glow: rgba(0,229,212,0.12);
+  --teal-glow2: rgba(0,229,212,0.25);
+  --red: #ff3d3d;
+  --orange: #ff8c00;
+  --yellow: #ffd600;
+  --green: #00e676;
+  --text: #e0f0f0;
+  --text-dim: #5a7878;
+  --text-mid: #8aacac;
+  --radius: 14px;
+  --radius-sm: 9px;
+  --nav-h: 68px;
+  --gsx-red: #cc0000;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Exo 2', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  max-width: 430px;
+  margin: 0 auto;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Subtle grid bg */
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(0,229,212,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,229,212,0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* ── CROSSHAIR OVERLAY ── */
+#crosshair-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  display: none;
+}
+
+.ch-overlay-h {
+  position: absolute;
+  background: var(--teal);
+  height: 2px;
+  border-radius: 2px;
+  box-shadow: 0 0 6px var(--teal), 0 0 12px var(--teal);
+}
+
+.ch-overlay-v {
+  position: absolute;
+  background: var(--teal);
+  width: 2px;
+  border-radius: 2px;
+  box-shadow: 0 0 6px var(--teal), 0 0 12px var(--teal);
+}
+
+.ch-overlay-dot {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--teal), 0 0 16px var(--teal);
+  transform: translate(-50%, -50%);
+}
+
+/* ── ROG MONITOR OVERLAY ── */
+#rog-overlay {
+  position: fixed;
+  top: 60px;
+  right: 8px;
+  width: 140px;
+  background: rgba(8,11,11,0.92);
+  border: 1px solid var(--gsx-red);
+  border-radius: 8px;
+  padding: 8px;
+  z-index: 8000;
+  display: none;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 20px rgba(204,0,0,0.3), inset 0 0 20px rgba(204,0,0,0.05);
+}
+
+#rog-overlay::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: 10px; right: 10px; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gsx-red), transparent);
+}
+
+.rog-logo {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: 11px;
+  color: var(--gsx-red);
+  letter-spacing: 2px;
+  text-align: center;
+  margin-bottom: 6px;
+  text-shadow: 0 0 8px var(--gsx-red);
+}
+
+.rog-stat {
+  margin-bottom: 5px;
+}
+
+.rog-stat-label {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  color: #888;
+  margin-bottom: 2px;
+}
+
+.rog-stat-label span:last-child {
+  color: var(--teal);
+  font-weight: bold;
+}
+
+.rog-bar-bg {
+  height: 4px;
+  background: #1a0000;
+  border-radius: 2px;
+  overflow: hidden;
+  border: 1px solid #330000;
+}
+
+.rog-bar-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.8s ease;
+  position: relative;
+}
+
+.rog-bar-fill::after {
+  content:'';
+  position:absolute;
+  right:0;top:0;bottom:0;width:4px;
+  background: rgba(255,255,255,0.4);
+  border-radius:2px;
+}
+
+.rog-fps {
+  text-align: center;
+  font-family: 'Orbitron', monospace;
+  font-size: 22px;
+  font-weight: 900;
+  color: var(--gsx-red);
+  text-shadow: 0 0 12px var(--gsx-red);
+  margin: 4px 0 2px;
+  letter-spacing: 1px;
+}
+
+.rog-fps-label {
+  text-align: center;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 8px;
+  color: #666;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+
+.rog-temp {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  color: #888;
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid #220000;
+}
+
+.rog-temp span:last-child { color: var(--orange); }
+
+/* ── HEADER ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px 10px;
+  position: sticky;
+  top: 0;
+  z-index: 500;
+  background: rgba(8,11,11,0.95);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0,229,212,0.08);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-icon {
+  width: 42px;
+  height: 42px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logo-icon svg {
+  width: 100%; height: 100%;
+  filter: drop-shadow(0 0 6px var(--teal));
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.logo-main {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 900;
+  font-size: 15px;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, var(--teal), #fff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.logo-by {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-weight: 300;
+  letter-spacing: 0.5px;
+}
+
+.id-badge {
+  background: var(--surface2);
+  border: 1px solid var(--teal-dim);
+  border-radius: 7px;
+  padding: 5px 12px;
+  font-size: 12px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 600;
+  color: var(--teal);
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 8px var(--teal);
+  box-shadow: 0 0 10px rgba(0,229,212,0.1);
+}
+
+/* ── CONTENT ── */
+.content {
+  flex: 1;
+  padding: 12px 14px calc(var(--nav-h) + 12px);
+  overflow-y: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.tab-panel { display: none; }
+.tab-panel.active { display: block; animation: fadeUp .2s ease; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(0,229,212,0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.card::before {
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;height:1px;
+  background: linear-gradient(90deg, transparent, rgba(0,229,212,0.3), transparent);
+}
+
+.card-title {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+  color: var(--text);
+}
+
+.card-sub {
+  font-size: 11.5px;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+/* ── TOGGLE ── */
+.toggle-wrap {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.toggle {
+  position: relative;
+  width: 48px; height: 26px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.toggle input { opacity:0; width:0; height:0; position:absolute; }
+
+.toggle-slider {
+  position: absolute;
+  inset: 0;
+  background: #1e2a2a;
+  border-radius: 26px;
+  cursor: pointer;
+  transition: background .25s;
+  border: 1px solid #2a3838;
+}
+
+.toggle-slider::before {
+  content: '';
+  position: absolute;
+  width: 20px; height: 20px;
+  left: 2px; top: 2px;
+  background: #3a5050;
+  border-radius: 50%;
+  transition: transform .25s, background .25s, box-shadow .25s;
+}
+
+.toggle input:checked ~ .toggle-slider {
+  background: rgba(0,229,212,0.2);
+  border-color: var(--teal-dim);
+}
+
+.toggle input:checked ~ .toggle-slider::before {
+  transform: translateX(22px);
+  background: var(--teal);
+  box-shadow: 0 0 8px var(--teal);
+}
+
+/* ── SECTION TITLE ── */
+.section-title {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+  color: var(--teal);
+  text-shadow: 0 0 10px var(--teal);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.section-title::after {
+  content:'';
+  flex:1;
+  height:1px;
+  background: linear-gradient(90deg, var(--teal-dim), transparent);
+}
+
+/* ── GAME LIST ── */
+.game-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  border: 1px solid rgba(0,229,212,0.08);
+  transition: all .2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.game-item::after {
+  content:'';
+  position:absolute;
+  inset:0;
+  background: linear-gradient(135deg, rgba(0,229,212,0.05), transparent);
+  opacity:0;
+  transition: opacity .2s;
+}
+
+.game-item:hover { border-color: var(--teal); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(0,229,212,0.15); }
+.game-item:hover::after { opacity:1; }
+
+.game-thumb {
+  width: 54px; height: 54px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.game-thumb-ff {
+  background: linear-gradient(135deg, #1a2a1a, #003020);
+  border: 1px solid rgba(0,200,100,0.3);
+}
+
+.game-thumb-ffmax {
+  background: linear-gradient(135deg, #1a1a2a, #002040);
+  border: 1px solid rgba(0,100,200,0.3);
+}
+
+.game-info { flex: 1; }
+
+.game-name {
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.game-tag {
+  font-size: 10px;
+  color: var(--text-dim);
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.game-arrow {
+  color: var(--teal);
+  font-size: 18px;
+  opacity: 0.6;
+}
+
+/* ── GAME SCREEN ── */
+.game-screen {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: #000;
+  z-index: 9000;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Orbitron', sans-serif;
+}
+
+.game-screen.show { display: flex; animation: fadeUp .3s ease; }
+
+.game-screen-bg {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 50% 40%, #002020, #000 70%);
+}
+
+.game-screen-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  width: 100%;
+  padding: 30px;
+}
+
+.game-screen-logo {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.game-screen-title {
+  font-size: 24px;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: var(--teal);
+  text-shadow: 0 0 20px var(--teal);
+  margin-bottom: 6px;
+}
+
+.game-screen-sub {
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 3px;
+  margin-bottom: 40px;
+}
+
+.loading-bar-wrap {
+  width: 100%;
+  max-width: 280px;
+  margin: 0 auto 16px;
+  height: 4px;
+  background: #111;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid #222;
+}
+
+.loading-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--teal-dim), var(--teal));
+  border-radius: 4px;
+  width: 0%;
+  box-shadow: 0 0 8px var(--teal);
+  animation: load 2.5s ease forwards;
+}
+
+@keyframes load {
+  0% { width: 0% }
+  60% { width: 75% }
+  100% { width: 100% }
+}
+
+.loading-text {
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 2px;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.game-features-list {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: left;
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.gfl-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  color: var(--text-dim);
+  opacity: 0;
+  animation: fadeIn .4s ease forwards;
+}
+
+.gfl-item.active { color: var(--teal); }
+.gfl-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--text-dim); flex-shrink: 0; }
+.gfl-item.active .gfl-dot { background: var(--teal); box-shadow: 0 0 6px var(--teal); }
+
+@keyframes fadeIn { to { opacity:1; } }
+
+.btn-back-game {
+  position: absolute;
+  top: 20px; left: 20px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 8px;
+  padding: 8px 14px;
+  color: #fff;
+  font-family: 'Exo 2', sans-serif;
+  font-size: 13px;
+  cursor: pointer;
+  z-index: 3;
+  transition: background .2s;
+}
+
+.btn-back-game:hover { background: rgba(255,255,255,0.15); }
+
+/* ── CROSSHAIR TAB ── */
+.slider-label {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.slider-label .val { color: var(--teal); text-shadow: 0 0 8px var(--teal); }
+
+input[type=range] {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 4px;
+  border-radius: 4px;
+  background: #1e2828;
+  outline: none;
+  cursor: pointer;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--teal);
+  cursor: pointer;
+  box-shadow: 0 0 10px var(--teal);
+  border: 2px solid rgba(0,229,212,0.3);
+}
+
+.ch-preview-box {
+  width: 100%;
+  height: 120px;
+  background: radial-gradient(ellipse at center, #0a1a1a, #040808);
+  border-radius: 10px;
+  border: 1px solid rgba(0,229,212,0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.ch-preview-box::before {
+  content:'';
+  position:absolute;
+  inset:0;
+  background-image: linear-gradient(rgba(0,229,212,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,212,0.04) 1px, transparent 1px);
+  background-size: 16px 16px;
+}
+
+#ch-preview {
+  position: relative;
+  z-index: 2;
+}
+
+.ch-p-h, .ch-p-v {
+  position: absolute;
+  background: var(--teal);
+  border-radius: 1px;
+  box-shadow: 0 0 4px var(--teal);
+  transition: all .2s;
+}
+
+.ch-p-h { height: 2px; top: 50%; transform: translateY(-50%); }
+.ch-p-v { width: 2px; left: 50%; transform: translateX(-50%); }
+
+.ch-p-dot {
+  position: absolute;
+  border-radius: 50%;
+  background: #fff;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  box-shadow: 0 0 8px var(--teal);
+  transition: all .2s;
+}
+
+.ch-style-grid {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.ch-style-btn {
+  aspect-ratio: 1;
+  background: var(--surface2);
+  border: 1px solid rgba(0,229,212,0.1);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all .2s;
+  font-size: 18px;
+  position: relative;
+}
+
+.ch-style-btn:hover { border-color: var(--teal); }
+.ch-style-btn.selected { border-color: var(--teal); background: rgba(0,229,212,0.1); box-shadow: 0 0 10px rgba(0,229,212,0.2); }
+
+.ch-color-grid {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+
+.ch-color-btn {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all .2s;
+  flex-shrink: 0;
+}
+
+.ch-color-btn:hover { transform: scale(1.2); }
+.ch-color-btn.selected { border-color: #fff; box-shadow: 0 0 8px rgba(255,255,255,0.4); }
+
+.btn {
+  background: var(--surface2);
+  border: 1px solid rgba(0,229,212,0.15);
+  border-radius: 8px;
+  color: var(--text);
+  padding: 9px 16px;
+  font-size: 12px;
+  font-family: 'Exo 2', sans-serif;
+  cursor: pointer;
+  transition: all .2s;
+  letter-spacing: 0.5px;
+}
+
+.btn:hover { background: #202a2a; border-color: var(--teal); color: var(--teal); }
+
+.btn-row { display: flex; gap: 8px; margin-top: 10px; }
+.btn-row .btn { flex: 1; text-align: center; }
+
+/* ── POSITION ── */
+.arrow-btn {
+  width: 42px; height: 42px;
+  background: var(--surface2);
+  border: 1px solid rgba(0,229,212,0.15);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all .15s;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.arrow-btn:active { background: var(--teal-dim); border-color: var(--teal); transform: scale(0.92); }
+
+.pos-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(0,229,212,0.1);
+  border: 1px solid var(--teal-dim);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 14px;
+}
+
+.pos-badge .axis { color: var(--teal); font-weight: bold; }
+
+/* ── ENV ROWS ── */
+.env-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface2);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  border: 1px solid rgba(0,229,212,0.06);
+}
+
+.env-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-mid);
+}
+
+.env-icon {
+  width: 28px; height: 28px;
+  background: var(--teal-glow);
+  border-radius: 7px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--teal);
+  font-size: 13px;
+  border: 1px solid rgba(0,229,212,0.1);
+}
+
+.env-val {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  text-align: right;
+  max-width: 55%;
+  word-break: break-all;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+/* ── SOCIAL ── */
+.social-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  border: 1px solid rgba(0,229,212,0.08);
+  transition: border-color .2s, background .2s;
+}
+
+.social-card:hover { border-color: var(--teal); background: rgba(0,229,212,0.04); }
+
+.social-icon {
+  width: 38px; height: 38px;
+  background: var(--teal-glow);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--teal);
+  font-size: 18px;
+  flex-shrink: 0;
+  border: 1px solid rgba(0,229,212,0.15);
+}
+
+.social-title { font-weight: 600; font-size: 14px; margin-bottom: 3px; }
+.social-desc { font-size: 11px; color: var(--text-dim); line-height: 1.5; }
+
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  height: var(--nav-h);
+  background: rgba(12,16,16,0.97);
+  border-top: 1px solid rgba(0,229,212,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 8px;
+  z-index: 500;
+  backdrop-filter: blur(12px);
+}
+
+.nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  padding: 8px 16px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all .2s;
+  color: var(--text-dim);
+  font-size: 10px;
+  font-weight: 500;
+  border: none;
+  background: transparent;
+  font-family: 'Exo 2', sans-serif;
+  letter-spacing: 0.5px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.nav-icon { font-size: 20px; transition: all .2s; }
+
+.nav-btn.active {
+  background: linear-gradient(135deg, rgba(0,229,212,0.2), rgba(0,229,212,0.05));
+  color: var(--teal);
+  border: 1px solid rgba(0,229,212,0.25);
+  box-shadow: 0 0 16px rgba(0,229,212,0.2);
+}
+
+/* ── TOAST ── */
+.toast {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: var(--surface2);
+  border: 1px solid var(--teal-dim);
+  border-radius: 10px;
+  padding: 10px 20px;
+  font-size: 12px;
+  color: var(--teal);
+  font-family: 'Share Tech Mono', monospace;
+  letter-spacing: 1px;
+  z-index: 9999;
+  opacity: 0;
+  transition: all .3s;
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 2px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #2a3838; border-radius: 2px; }
+
+/* range track override for webkit */
+.range-track {
+  position: relative;
+  height: 4px;
+  border-radius: 4px;
+  background: #1a2828;
+  margin-bottom: 12px;
+}
+.range-fill-bar {
+  position: absolute;
+  left:0;top:0;bottom:0;
+  background: linear-gradient(90deg, var(--teal-dim), var(--teal));
+  border-radius: 4px;
+  box-shadow: 0 0 8px rgba(0,229,212,0.3);
+}
+
+/* Feature active state */
+.feature-active .card-title { color: var(--teal); }
+
+/* Glow pulse on active monitor */
+@keyframes rogPulse {
+  0%,100% { box-shadow: 0 0 20px rgba(204,0,0,0.3), inset 0 0 20px rgba(204,0,0,0.05); }
+  50% { box-shadow: 0 0 35px rgba(204,0,0,0.5), inset 0 0 30px rgba(204,0,0,0.1); }
+}
+#rog-overlay.active { animation: rogPulse 2s infinite; }
+</style>
+</head>
+<body>
+
+<!-- ══ CROSSHAIR OVERLAY ══ -->
+<div id="crosshair-overlay">
+  <div class="ch-overlay-h" id="cho-h"></div>
+  <div class="ch-overlay-v" id="cho-v"></div>
+  <div class="ch-overlay-dot" id="cho-dot"></div>
+</div>
+
+<!-- ══ ROG MONITOR OVERLAY ══ -->
+<div id="rog-overlay">
+  <div class="rog-logo">⬛ ROG MONITOR</div>
+  <div class="rog-fps" id="rog-fps">60</div>
+  <div class="rog-fps-label">FRAMES / SEC</div>
+
+  <div class="rog-stat">
+    <div class="rog-stat-label"><span>CPU</span><span id="rog-cpu-val">0%</span></div>
+    <div class="rog-bar-bg"><div class="rog-bar-fill" id="rog-cpu" style="width:0%;background:linear-gradient(90deg,#cc0000,#ff3d3d)"></div></div>
+  </div>
+  <div class="rog-stat">
+    <div class="rog-stat-label"><span>GPU</span><span id="rog-gpu-val">0%</span></div>
+    <div class="rog-bar-bg"><div class="rog-bar-fill" id="rog-gpu" style="width:0%;background:linear-gradient(90deg,#cc6600,#ff8c00)"></div></div>
+  </div>
+  <div class="rog-stat">
+    <div class="rog-stat-label"><span>RAM</span><span id="rog-ram-val">0%</span></div>
+    <div class="rog-bar-bg"><div class="rog-bar-fill" id="rog-ram" style="width:0%;background:linear-gradient(90deg,#006644,#00e676)"></div></div>
+  </div>
+  <div class="rog-stat">
+    <div class="rog-stat-label"><span>NET</span><span id="rog-net-val">0 ms</span></div>
+    <div class="rog-bar-bg"><div class="rog-bar-fill" id="rog-net" style="width:0%;background:linear-gradient(90deg,#004488,#00bcd4)"></div></div>
+  </div>
+  <div class="rog-temp">
+    <span>TEMP</span>
+    <span id="rog-temp-val">38°C</span>
+  </div>
+</div>
+
+<!-- ══ GAME SCREEN ══ -->
+<div class="game-screen" id="game-screen">
+  <div class="game-screen-bg"></div>
+  <button class="btn-back-game" onclick="closeGame()">✕ BACK</button>
+  <div class="game-screen-content">
+    <div class="game-screen-logo" id="gs-logo">🔥</div>
+    <div class="game-screen-title" id="gs-title">FREE FIRE</div>
+    <div class="game-screen-sub" id="gs-sub">GOODSENSIX ACTIVE</div>
+
+    <div class="loading-bar-wrap">
+      <div class="loading-bar-fill" id="gs-loadbar"></div>
+    </div>
+    <div class="loading-text" id="gs-loadtext">INITIALIZING...</div>
+
+    <div class="game-features-list" id="gs-features"></div>
+  </div>
+</div>
+
+<!-- ══ TOAST ══ -->
+<div class="toast" id="toast"></div>
+
+<!-- ══ HEADER ══ -->
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="4,22 14,4 40,4 40,40 14,40" fill="rgba(0,229,212,0.08)" stroke="rgba(0,229,212,0.5)" stroke-width="1"/>
+        <text x="8" y="29" font-family="Orbitron" font-weight="900" font-size="13" fill="url(#ggrad)">GSX</text>
+        <defs>
+          <linearGradient id="ggrad" x1="0" y1="0" x2="44" y2="44">
+            <stop offset="0%" stop-color="#00e5d4"/>
+            <stop offset="100%" stop-color="#ffffff"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+    <div class="logo-text">
+      <span class="logo-main">GOODSENSIX</span>
+      <span class="logo-by">by Xyroo</span>
+    </div>
+  </div>
+  <div class="id-badge">ID-140134</div>
+</div>
+
+<!-- ══ CONTENT ══ -->
+<div class="content">
+
+  <!-- GAME TAB -->
+  <div class="tab-panel active" id="tab-game">
+    <div class="section-title">SELECT GAME</div>
+    <div class="game-item" onclick="openGame('ff')">
+      <div class="game-thumb game-thumb-ff">🔥</div>
+      <div class="game-info">
+        <div class="game-name">Free Fire</div>
+        <div class="game-tag">GARENA · BATTLE ROYALE</div>
+      </div>
+      <div class="game-arrow">▶</div>
+    </div>
+    <div class="game-item" onclick="openGame('ffmax')">
+      <div class="game-thumb game-thumb-ffmax">🔥</div>
+      <div class="game-info">
+        <div class="game-name">Free Fire MAX</div>
+        <div class="game-tag">GARENA · HD GRAPHICS</div>
+      </div>
+      <div class="game-arrow">▶</div>
+    </div>
+  </div>
+
+  <!-- FEATURE TAB -->
+  <div class="tab-panel" id="tab-feature">
+    <div class="section-title">FEATURES</div>
+
+    <div class="card" id="feat-dpi">
+      <div class="toggle-wrap">
+        <div>
+          <div class="card-title">Smart Switch DPI & PPI</div>
+          <div class="card-sub">Detects FreeFire active using stack list to fetch PID and dumpSys to ensure foreground status. DPI & PPI adjusted by user settings.</div>
+        </div>
+        <label class="toggle"><input type="checkbox" onchange="toggleFeature('dpi',this,'Smart Switch DPI & PPI')"><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+
+    <div class="card" id="feat-sens">
+      <div class="toggle-wrap">
+        <div>
+          <div class="card-title">Sensitivity GameLab</div>
+          <div class="card-sub">Runtime intervention configs sensitivity parameter directly into game system framework to increase sensitivity.</div>
+        </div>
+        <label class="toggle"><input type="checkbox" onchange="toggleFeature('sens',this,'Sensitivity GameLab')"><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+
+    <div class="card" id="feat-cache">
+      <div class="toggle-wrap">
+        <div>
+          <div class="card-title">Quick Cache Cleaner</div>
+          <div class="card-sub">Automatically cleans partial cache to free up memory.</div>
+        </div>
+        <label class="toggle"><input type="checkbox" onchange="toggleFeature('cache',this,'Quick Cache Cleaner')"><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+
+    <div class="card" id="feat-rog">
+      <div class="toggle-wrap">
+        <div>
+          <div class="card-title">Monitoring ROG</div>
+          <div class="card-sub">Real-time Android performance monitor in ROG style — FPS, CPU, GPU, RAM, Ping & Temp.</div>
+        </div>
+        <label class="toggle"><input type="checkbox" id="rog-toggle" onchange="toggleROG(this)"><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+
+    <div class="card" id="feat-fps">
+      <div class="toggle-wrap">
+        <div>
+          <div class="card-title">FPS Visual Emulator</div>
+          <div class="card-sub">Display fake high FPS visual indicator like BlueStack emulator.</div>
+        </div>
+        <label class="toggle"><input type="checkbox" onchange="toggleFeature('fps',this,'FPS Visual Emulator')"><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+
+    <div class="card" style="cursor:pointer;" onclick="openTaskManager()">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div>
+          <div class="card-title">Task Manager</div>
+          <div class="card-sub">Monitor and stop background running processes to free RAM.</div>
+        </div>
+        <span style="font-size:20px;color:var(--teal);">↗</span>
+      </div>
+    </div>
+
+    <!-- Task Manager panel -->
+    <div class="card" id="task-panel" style="display:none;">
+      <div class="section-title" style="margin-bottom:10px;">TASK MANAGER</div>
+      <div id="task-list"></div>
+      <button class="btn" style="width:100%;margin-top:8px;color:var(--red);border-color:rgba(255,61,61,0.3);" onclick="killAll()">⬛ KILL ALL BACKGROUND</button>
+    </div>
+  </div>
+
+  <!-- CROSSHAIR TAB -->
+  <div class="tab-panel" id="tab-crosshair">
+    <div class="section-title">CROSSHAIR</div>
+
+    <div class="card">
+      <div class="toggle-wrap">
+        <div>
+          <div class="card-title">Crosshair Aim-Assistant</div>
+          <div class="card-sub">Enable overlay crosshair on screen</div>
+        </div>
+        <label class="toggle"><input type="checkbox" id="ch-enable" onchange="toggleCrosshair(this)"><span class="toggle-slider"></span></label>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title" style="margin-bottom:10px;font-size:10px;">STYLE</div>
+      <div class="ch-style-grid">
+        <div class="ch-style-btn selected" onclick="setCHStyle('classic',this)" title="Classic">
+          <svg width="28" height="28" viewBox="0 0 28 28"><line x1="14" y1="2" x2="14" y2="26" stroke="#00e5d4" stroke-width="2"/><line x1="2" y1="14" x2="26" y2="14" stroke="#00e5d4" stroke-width="2"/><circle cx="14" cy="14" r="2" fill="#fff"/></svg>
+        </div>
+        <div class="ch-style-btn" onclick="setCHStyle('dot',this)" title="Dot">
+          <svg width="28" height="28" viewBox="0 0 28 28"><circle cx="14" cy="14" r="4" fill="#00e5d4"/></svg>
+        </div>
+        <div class="ch-style-btn" onclick="setCHStyle('gap',this)" title="Gap">
+          <svg width="28" height="28" viewBox="0 0 28 28"><line x1="14" y1="2" x2="14" y2="9" stroke="#00e5d4" stroke-width="2"/><line x1="14" y1="19" x2="14" y2="26" stroke="#00e5d4" stroke-width="2"/><line x1="2" y1="14" x2="9" y2="14" stroke="#00e5d4" stroke-width="2"/><line x1="19" y1="14" x2="26" y2="14" stroke="#00e5d4" stroke-width="2"/><circle cx="14" cy="14" r="1.5" fill="#fff"/></svg>
+        </div>
+        <div class="ch-style-btn" onclick="setCHStyle('x',this)" title="X Mark">
+          <svg width="28" height="28" viewBox="0 0 28 28"><line x1="4" y1="4" x2="24" y2="24" stroke="#00e5d4" stroke-width="2"/><line x1="24" y1="4" x2="4" y2="24" stroke="#00e5d4" stroke-width="2"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title" style="margin-bottom:10px;font-size:10px;">COLOR</div>
+      <div class="ch-color-grid">
+        <div class="ch-color-btn selected" style="background:#00e5d4" onclick="setCHColor('#00e5d4',this)"></div>
+        <div class="ch-color-btn" style="background:#ff3d3d" onclick="setCHColor('#ff3d3d',this)"></div>
+        <div class="ch-color-btn" style="background:#00e676" onclick="setCHColor('#00e676',this)"></div>
+        <div class="ch-color-btn" style="background:#ffd600" onclick="setCHColor('#ffd600',this)"></div>
+        <div class="ch-color-btn" style="background:#ff8c00" onclick="setCHColor('#ff8c00',this)"></div>
+        <div class="ch-color-btn" style="background:#ffffff" onclick="setCHColor('#ffffff',this)"></div>
+        <div class="ch-color-btn" style="background:#e040fb" onclick="setCHColor('#e040fb',this)"></div>
+        <div class="ch-color-btn" style="background:#2979ff" onclick="setCHColor('#2979ff',this)"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-title" style="margin-bottom:10px;font-size:10px;">PREVIEW</div>
+      <div class="ch-preview-box">
+        <div id="ch-preview" style="position:relative;width:80px;height:80px;">
+          <div class="ch-p-h" id="chp-h" style="width:80px;left:0"></div>
+          <div class="ch-p-v" id="chp-v" style="height:80px;top:0"></div>
+          <div class="ch-p-dot" id="chp-dot" style="width:6px;height:6px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="slider-label"><span>SIZE</span><span class="val" id="size-val">42%</span></div>
+      <input type="range" id="size-range" min="5" max="100" value="42" oninput="updateSize(this.value)">
+      <div style="text-align:right;margin-top:8px;">
+        <button class="btn" onclick="resetSize()">Reset Size</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="slider-label"><span>OPACITY</span><span class="val" id="opacity-val">100%</span></div>
+      <input type="range" id="opacity-range" min="20" max="100" value="100" oninput="updateOpacity(this.value)">
+    </div>
+
+    <div class="card">
+      <div class="section-title" style="margin-bottom:10px;font-size:10px;">POSITION</div>
+      <div style="display:flex;align-items:center;gap:14px;">
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div class="pos-badge"><span class="axis">X</span> <span id="x-val">0</span></div>
+          <div class="pos-badge"><span class="axis">Y</span> <span id="y-val">0</span></div>
+        </div>
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;">
+          <div class="arrow-btn" onclick="adjustPos('y',-1)">↑</div>
+          <div style="display:flex;gap:6px;">
+            <div class="arrow-btn" onclick="adjustPos('x',-1)">←</div>
+            <div style="width:42px;height:42px;background:var(--surface2);border-radius:10px;border:1px solid rgba(0,229,212,0.1);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--text-dim);">⊕</div>
+            <div class="arrow-btn" onclick="adjustPos('x',1)">→</div>
+          </div>
+          <div class="arrow-btn" onclick="adjustPos('y',1)">↓</div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="resetX()">Reset X</button>
+        <button class="btn" onclick="resetY()">Reset Y</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROFILE TAB -->
+  <div class="tab-panel" id="tab-profile">
+    <div class="card" style="margin-bottom:12px;text-align:center;padding:24px;">
+      <div style="font-family:'Orbitron',sans-serif;font-weight:900;font-size:28px;background:linear-gradient(90deg,var(--teal),#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-shadow:none;margin-bottom:4px;">GOODSENSIX</div>
+      <div style="font-size:11px;color:var(--text-dim);letter-spacing:2px;">by Xyroo · App Version 2.2.0</div>
+    </div>
+
+    <div class="section-title">ENVIRONMENT</div>
+    <div class="card">
+      <div class="env-row">
+        <div class="env-left"><div class="env-icon">📦</div><span>Application</span></div>
+        <div class="env-val">GoodSensiX Free</div>
+      </div>
+      <div class="env-row">
+        <div class="env-left"><div class="env-icon">🤖</div><span>Android Version</span></div>
+        <div class="env-val">15</div>
+      </div>
+      <div class="env-row" style="margin-bottom:0;">
+        <div class="env-left"><div class="env-icon">⚙️</div><span>ABI Supported</span></div>
+        <div class="env-val">arm64-v8a, armeabi-v7a, armeabi</div>
+      </div>
+    </div>
+
+    <div style="height:8px;"></div>
+    <div class="section-title">COMMUNITY</div>
+
+    <div class="social-card">
+      <div class="social-icon">💬</div>
+      <div>
+        <div class="social-title">Join Saluran WhatsApp</div>
+        <div class="social-desc">Join the official channel to monitor the latest updates and announcements.</div>
+      </div>
+    </div>
+    <div class="social-card">
+      <div class="social-icon">🎵</div>
+      <div>
+        <div class="social-title">Ikuti TikTok Resmi</div>
+        <div class="social-desc">Follow our official TikTok for latest SensiX content and announcements.</div>
+      </div>
+    </div>
+    <div class="social-card">
+      <div class="social-icon">🎮</div>
+      <div>
+        <div class="social-title">Join Discord Server</div>
+        <div class="social-desc">Join our official Discord community for info, feedback and announcements.</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ══ BOTTOM NAV ══ -->
+<nav class="bottom-nav">
+  <button class="nav-btn active" id="nav-game" onclick="switchTab('game')">
+    <span class="nav-icon">⊞</span><span>Game</span>
+  </button>
+  <button class="nav-btn" id="nav-feature" onclick="switchTab('feature')">
+    <span class="nav-icon">⊜</span><span>Feature</span>
+  </button>
+  <button class="nav-btn" id="nav-crosshair" onclick="switchTab('crosshair')">
+    <span class="nav-icon">⊕</span><span>Crosshair</span>
+  </button>
+  <button class="nav-btn" id="nav-profile" onclick="switchTab('profile')">
+    <span class="nav-icon">◉</span><span>Profile</span>
+  </button>
+</nav>
+
+<script>
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+const state = {
+  ch: {
+    enabled: false,
+    style: 'classic',
+    color: '#00e5d4',
+    size: 42,
+    opacity: 100,
+    x: 0,
+    y: 0
+  },
+  rog: { enabled: false },
+  features: {}
+};
+
+// ═══════════════════════════════════════
+// TABS
+// ═══════════════════════════════════════
+function switchTab(name) {
+  ['game','feature','crosshair','profile'].forEach(t => {
+    document.getElementById('tab-'+t).classList.remove('active');
+    document.getElementById('nav-'+t).classList.remove('active');
+  });
+  document.getElementById('tab-'+name).classList.add('active');
+  document.getElementById('nav-'+name).classList.add('active');
+}
+
+// ═══════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════
+let toastTimer;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+}
+
+// ═══════════════════════════════════════
+// GAME SCREEN
+// ═══════════════════════════════════════
+const games = {
+  ff: {
+    logo: '🔥',
+    title: 'FREE FIRE',
+    sub: 'GOODSENSIX INJECTED',
+    color: '#00c853',
+    pkg: 'com.dts.freefireth',
+    features: ['DPI Smart Switch loaded','Sensitivity override active','Cache cleared','Anti-lag mode ON','Crosshair overlay ready']
+  },
+  ffmax: {
+    logo: '🔥',
+    title: 'FREE FIRE MAX',
+    sub: 'GOODSENSIX INJECTED',
+    color: '#00b0ff',
+    pkg: 'com.dts.freefiremax',
+    features: ['HD Graphics mode detected','DPI Smart Switch loaded','Sensitivity override active','Cache cleared','Crosshair overlay ready']
+  }
+};
+
+let gameLoadTimer = null;
+
+function openGame(id) {
+  const g = games[id];
+  const screen = document.getElementById('game-screen');
+  screen.classList.add('show');
+
+  document.getElementById('gs-logo').textContent = g.logo;
+  document.getElementById('gs-title').textContent = g.title;
+  document.getElementById('gs-sub').textContent = g.sub;
+  document.getElementById('gs-title').style.color = g.color;
+  document.getElementById('gs-title').style.textShadow = `0 0 20px ${g.color}`;
+
+  // Reset loading bar
+  const lb = document.getElementById('gs-loadbar');
+  lb.style.animation = 'none';
+  lb.offsetHeight; // reflow
+  lb.style.animation = '';
+
+  // Features list
+  const fl = document.getElementById('gs-features');
+  fl.innerHTML = '';
+  const loadText = document.getElementById('gs-loadtext');
+  loadText.textContent = 'LOADING GOODSENSIX...';
+
+  g.features.forEach((f, i) => {
+    const div = document.createElement('div');
+    div.className = 'gfl-item';
+    div.style.animationDelay = `${0.6 + i * 0.35}s`;
+    div.innerHTML = `<div class="gfl-dot"></div>${f}`;
+    fl.appendChild(div);
+
+    setTimeout(() => {
+      div.classList.add('active');
+    }, (0.6 + i * 0.35) * 1000 + 200);
+  });
+
+  const msgs = ['LOADING GOODSENSIX...','INJECTING MODULES...','OPTIMIZING SETTINGS...','READY!'];
+  let mi = 0;
+  clearInterval(gameLoadTimer);
+  gameLoadTimer = setInterval(() => {
+    mi++;
+    if(mi < msgs.length) loadText.textContent = msgs[mi];
+    if(mi >= msgs.length - 1) { clearInterval(gameLoadTimer); }
+  }, 600);
+
+  // Try open app deep link after 3s
+  setTimeout(() => {
+    if(id === 'ff') {
+      tryOpenApp('https://ff.garena.com/', 'com.dts.freefireth');
+    } else {
+      tryOpenApp('https://ff.garena.com/', 'com.dts.freefiremax');
+    }
+  }, 3000);
+}
+
+function tryOpenApp(fallbackUrl, pkg) {
+  // Try Android intent
+  const intentUrl = `intent://main#Intent;scheme=android-app;package=${pkg};end`;
+  const link = document.createElement('a');
+  link.href = intentUrl;
+  link.style.display = 'none';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+
+  // Also try market link
+  setTimeout(() => {
+    window.location.href = `market://details?id=${pkg}`;
+  }, 500);
+}
+
+function closeGame() {
+  document.getElementById('game-screen').classList.remove('show');
+  clearInterval(gameLoadTimer);
+}
+
+// ═══════════════════════════════════════
+// FEATURE TOGGLES
+// ═══════════════════════════════════════
+function toggleFeature(key, el, name) {
+  state.features[key] = el.checked;
+  showToast(name + (el.checked ? ' ✓ ON' : ' ✗ OFF'));
+  if(el.checked) {
+    el.closest('.card').style.borderColor = 'rgba(0,229,212,0.3)';
+    el.closest('.card').querySelector('.card-title').style.color = 'var(--teal)';
+  } else {
+    el.closest('.card').style.borderColor = '';
+    el.closest('.card').querySelector('.card-title').style.color = '';
+  }
+}
+
+// ═══════════════════════════════════════
+// ROG MONITOR
+// ═══════════════════════════════════════
+let rogTimer = null;
+
+function toggleROG(el) {
+  const overlay = document.getElementById('rog-overlay');
+  state.rog.enabled = el.checked;
+
+  if(el.checked) {
+    overlay.style.display = 'block';
+    overlay.classList.add('active');
+    startROG();
+    showToast('Monitoring ROG ✓ ACTIVE');
+    toggleFeature('rog', el, 'Monitoring ROG');
+  } else {
+    overlay.style.display = 'none';
+    overlay.classList.remove('active');
+    stopROG();
+    showToast('Monitoring ROG ✗ OFF');
+    el.closest('.card').style.borderColor = '';
+    el.closest('.card').querySelector('.card-title').style.color = '';
+  }
+}
+
+let rogData = { cpu: 35, gpu: 28, ram: 52, net: 45, fps: 60, temp: 38 };
+
+function startROG() {
+  updateROG();
+  rogTimer = setInterval(updateROG, 1000);
+}
+
+function stopROG() { clearInterval(rogTimer); }
+
+function updateROG() {
+  // Simulate realistic fluctuating values
+  rogData.cpu = clamp(rogData.cpu + rand(-8, 10), 20, 95);
+  rogData.gpu = clamp(rogData.gpu + rand(-6, 8), 15, 90);
+  rogData.ram = clamp(rogData.ram + rand(-3, 4), 40, 88);
+  rogData.net = clamp(rogData.net + rand(-12, 15), 8, 180);
+  rogData.fps = clamp(rogData.fps + rand(-5, 5), 30, 120);
+  rogData.temp = clamp(rogData.temp + rand(-1, 2), 35, 65);
+
+  document.getElementById('rog-fps').textContent = rogData.fps;
+  setROGBar('rog-cpu', 'rog-cpu-val', rogData.cpu, '%');
+  setROGBar('rog-gpu', 'rog-gpu-val', rogData.gpu, '%');
+  setROGBar('rog-ram', 'rog-ram-val', rogData.ram, '%');
+
+  const netPct = Math.min((rogData.net / 200) * 100, 100);
+  document.getElementById('rog-net').style.width = netPct + '%';
+  document.getElementById('rog-net-val').textContent = rogData.net + ' ms';
+
+  document.getElementById('rog-temp-val').textContent = rogData.temp + '°C';
+
+  // Color FPS based on value
+  const fpsEl = document.getElementById('rog-fps');
+  fpsEl.style.color = rogData.fps >= 60 ? 'var(--gsx-red)' : rogData.fps >= 45 ? 'var(--orange)' : 'var(--red)';
+  fpsEl.style.textShadow = `0 0 12px ${fpsEl.style.color}`;
+}
+
+function setROGBar(barId, valId, pct, unit) {
+  document.getElementById(barId).style.width = pct + '%';
+  document.getElementById(valId).textContent = Math.round(pct) + unit;
+}
+
+function clamp(v, mn, mx) { return Math.max(mn, Math.min(mx, Math.round(v))); }
+function rand(mn, mx) { return Math.random() * (mx - mn) + mn; }
+
+// ═══════════════════════════════════════
+// TASK MANAGER
+// ═══════════════════════════════════════
+const mockApps = [
+  { name: 'Google Play Services', ram: '128 MB', cpu: '4.2%', icon: '📦' },
+  { name: 'Chrome Browser', ram: '210 MB', cpu: '1.8%', icon: '🌐' },
+  { name: 'Instagram', ram: '185 MB', cpu: '0.5%', icon: '📷' },
+  { name: 'YouTube', ram: '162 MB', cpu: '0.2%', icon: '▶️' },
+  { name: 'TikTok', ram: '144 MB', cpu: '0.3%', icon: '🎵' },
+  { name: 'WhatsApp', ram: '98 MB', cpu: '0.1%', icon: '💬' },
+];
+
+let taskKilled = {};
+
+function openTaskManager() {
+  const panel = document.getElementById('task-panel');
+  const isOpen = panel.style.display !== 'none';
+  panel.style.display = isOpen ? 'none' : 'block';
+  if(!isOpen) renderTaskList();
+}
+
+function renderTaskList() {
+  const list = document.getElementById('task-list');
+  list.innerHTML = '';
+  mockApps.forEach((app, i) => {
+    if(taskKilled[i]) return;
+    const div = document.createElement('div');
+    div.style.cssText = `display:flex;align-items:center;gap:10px;background:var(--surface2);border-radius:8px;padding:10px;margin-bottom:6px;border:1px solid rgba(0,229,212,0.06);`;
+    div.innerHTML = `
+      <span style="font-size:18px">${app.icon}</span>
+      <div style="flex:1;">
+        <div style="font-size:12px;font-weight:600">${app.name}</div>
+        <div style="font-size:10px;color:var(--text-dim);font-family:'Share Tech Mono',monospace">RAM: ${app.ram} · CPU: ${app.cpu}</div>
+      </div>
+      <button onclick="killApp(${i})" style="background:rgba(255,61,61,0.15);border:1px solid rgba(255,61,61,0.3);border-radius:6px;padding:5px 10px;color:#ff6060;font-size:11px;cursor:pointer;font-family:'Exo 2',sans-serif;">KILL</button>
+    `;
+    list.appendChild(div);
+  });
+}
+
+function killApp(i) {
+  taskKilled[i] = true;
+  showToast(`${mockApps[i].name} killed`);
+  renderTaskList();
+}
+
+function killAll() {
+  mockApps.forEach((_, i) => taskKilled[i] = true);
+  showToast('All background apps killed ✓');
+  renderTaskList();
+  setTimeout(() => { taskKilled = {}; }, 3000);
+}
+
+// ═══════════════════════════════════════
+// CROSSHAIR
+// ═══════════════════════════════════════
+function toggleCrosshair(el) {
+  state.ch.enabled = el.checked;
+  const overlay = document.getElementById('crosshair-overlay');
+  overlay.style.display = el.checked ? 'block' : 'none';
+  if(el.checked) {
+    updateCHOverlay();
+    showToast('Crosshair ✓ VISIBLE');
+  } else {
+    showToast('Crosshair ✗ HIDDEN');
+  }
+}
+
+function setCHStyle(style, btn) {
+  state.ch.style = style;
+  document.querySelectorAll('.ch-style-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  updateCHPreview();
+  updateCHOverlay();
+}
+
+function setCHColor(color, btn) {
+  state.ch.color = color;
+  document.querySelectorAll('.ch-color-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  updateCHPreview();
+  updateCHOverlay();
+  showToast('Color updated');
+}
+
+function updateSize(v) {
+  state.ch.size = parseInt(v);
+  document.getElementById('size-val').textContent = v + '%';
+  updateCHPreview();
+  updateCHOverlay();
+}
+
+function resetSize() {
+  state.ch.size = 42;
+  document.getElementById('size-range').value = 42;
+  updateSize(42);
+}
+
+function updateOpacity(v) {
+  state.ch.opacity = parseInt(v);
+  document.getElementById('opacity-val').textContent = v + '%';
+  document.getElementById('crosshair-overlay').style.opacity = v / 100;
+}
+
+let posX = 0, posY = 0;
+function adjustPos(axis, d) {
+  if(axis === 'x') { posX += d; document.getElementById('x-val').textContent = posX; }
+  else { posY += d; document.getElementById('y-val').textContent = posY; }
+  state.ch.x = posX;
+  state.ch.y = posY;
+  updateCHOverlay();
+}
+function resetX() { posX = 0; state.ch.x = 0; document.getElementById('x-val').textContent = 0; updateCHOverlay(); }
+function resetY() { posY = 0; state.ch.y = 0; document.getElementById('y-val').textContent = 0; updateCHOverlay(); }
+
+function updateCHPreview() {
+  const c = state.ch.color;
+  const s = state.ch.style;
+  const sz = state.ch.size;
+  const scale = sz / 42;
+  const pxSz = Math.round(40 * scale);
+
+  const h = document.getElementById('chp-h');
+  const v = document.getElementById('chp-v');
+  const dot = document.getElementById('chp-dot');
+
+  // reset
+  h.style.display = 'block'; v.style.display = 'block'; dot.style.display = 'block';
+  h.style.background = c; v.style.background = c; dot.style.background = '#fff';
+  h.style.boxShadow = `0 0 6px ${c}`; v.style.boxShadow = `0 0 6px ${c}`; dot.style.boxShadow = `0 0 8px ${c}`;
+
+  if(s === 'classic') {
+    h.style.width = pxSz + 'px'; h.style.left = ((80 - pxSz)/2) + 'px';
+    v.style.height = pxSz + 'px'; v.style.top = ((80 - pxSz)/2) + 'px';
+    dot.style.width = '6px'; dot.style.height = '6px';
+  } else if(s === 'dot') {
+    h.style.display = 'none'; v.style.display = 'none';
+    dot.style.width = (8 * scale) + 'px'; dot.style.height = (8 * scale) + 'px';
+    dot.style.background = c;
+  } else if(s === 'gap') {
+    const half = pxSz / 2;
+    const gap = 8 * scale;
+    h.style.width = (half - gap) + 'px'; h.style.left = '0';
+    // simplified: just show gap effect
+    h.style.width = pxSz + 'px'; h.style.left = ((80-pxSz)/2) + 'px';
+    dot.style.width = '4px'; dot.style.height = '4px';
+  } else if(s === 'x') {
+    h.style.display = 'none'; v.style.display = 'none'; dot.style.display = 'none';
+    // X handled via transform
+    h.style.display = 'block';
+    h.style.width = pxSz + 'px'; h.style.left = ((80-pxSz)/2) + 'px';
+    h.style.transform = 'translateY(-50%) rotate(45deg)';
+    v.style.display = 'block';
+    v.style.height = pxSz + 'px'; v.style.top = ((80-pxSz)/2) + 'px';
+    v.style.transform = 'translateX(-50%) rotate(45deg)';
+  }
+
+  if(s !== 'x') {
+    h.style.transform = 'translateY(-50%)';
+    v.style.transform = 'translateX(-50%)';
+  }
+}
+
+function updateCHOverlay() {
+  if(!state.ch.enabled) return;
+  const c = state.ch.color;
+  const s = state.ch.style;
+  const sz = state.ch.size;
+  const cx = window.innerWidth / 2 + state.ch.x;
+  const cy = window.innerHeight / 2 + state.ch.y;
+  const len = Math.round((sz / 100) * Math.min(window.innerWidth, window.innerHeight) * 0.4);
+
+  const oh = document.getElementById('cho-h');
+  const ov = document.getElementById('cho-v');
+  const od = document.getElementById('cho-dot');
+
+  oh.style.background = c; oh.style.boxShadow = `0 0 6px ${c}, 0 0 12px ${c}`;
+  ov.style.background = c; ov.style.boxShadow = `0 0 6px ${c}, 0 0 12px ${c}`;
+  od.style.background = '#fff'; od.style.boxShadow = `0 0 8px ${c}, 0 0 16px ${c}`;
+
+  oh.style.display = 'block'; ov.style.display = 'block'; od.style.display = 'block';
+
+  if(s === 'classic' || s === 'gap') {
+    const gap = s === 'gap' ? 10 : 0;
+    oh.style.width = len + 'px'; oh.style.height = '2px';
+    oh.style.left = (cx - len/2) + 'px'; oh.style.top = (cy - 1) + 'px';
+    ov.style.width = '2px'; ov.style.height = len + 'px';
+    ov.style.left = (cx - 1) + 'px'; ov.style.top = (cy - len/2) + 'px';
+    od.style.width = '6px'; od.style.height = '6px';
+    od.style.left = cx + 'px'; od.style.top = cy + 'px';
+  } else if(s === 'dot') {
+    oh.style.display = 'none'; ov.style.display = 'none';
+    od.style.width = '10px'; od.style.height = '10px';
+    od.style.left = cx + 'px'; od.style.top = cy + 'px';
+    od.style.background = c;
+  } else if(s === 'x') {
+    oh.style.width = len + 'px'; oh.style.height = '2px';
+    oh.style.left = (cx - len/2) + 'px'; oh.style.top = (cy-1) + 'px';
+    oh.style.transform = 'rotate(45deg)';
+    ov.style.width = '2px'; ov.style.height = len + 'px';
+    ov.style.left = (cx-1) + 'px'; ov.style.top = (cy - len/2) + 'px';
+    ov.style.transform = 'rotate(45deg)';
+    od.style.display = 'none';
+  }
+}
+
+// Init preview
+updateCHPreview();
+</script>
+</body>
+</html>
